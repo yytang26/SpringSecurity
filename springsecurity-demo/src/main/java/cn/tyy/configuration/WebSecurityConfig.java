@@ -58,16 +58,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    }
     //chapter3
     //antMatchers("/admin/api/**)：匹配了/admin/api下的所有API
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/admin/api/**").hasRole("ADMIN").
-                antMatchers("/user/api/**").hasRole("USER").
-                antMatchers("/app.api/**").permitAll().anyRequest().authenticated().and().formLogin();
-    }
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http.authorizeRequests().antMatchers("/admin/api/**").hasRole("ADMIN").
+//                antMatchers("/user/api/**").hasRole("USER").
+//                antMatchers("/app.api/**").permitAll().anyRequest().authenticated().and().formLogin();
+//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser("user").password("123").roles("user").and().withUser("admin").password("123").roles("admin");
+    }
+    //chapter04：验证码校验
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/admin/api/**").hasRole("ADMIN").
+                antMatchers("/user/api/**").hasRole("USER").
+                antMatchers("/app.api/**").permitAll().anyRequest().authenticated().
+                and().csrf().disable().formLogin().and().sessionManagement().maximumSessions(1);
     }
 
     //    @Bean
